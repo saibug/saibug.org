@@ -1,6 +1,6 @@
 # saibug.org
 
-Greeting ...
+Greeting :) 
 
 This repo contains the source for my personnal website.
 
