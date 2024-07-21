@@ -1,0 +1,40 @@
+site_name: Saibug
+site_url: https://saibug.org
+site_description: "Saibug - GNU/LINUX system engineer"
+repo_url: https://github.com/saibug/saibug.org
+
+theme:
+  name: material
+  favicon: assets/images/favicon.ico
+  font: false
+  icon:
+    logo: material/human-greeting
+  features:
+    - navigation.tabs
+    - navigation.expand
+    - navigation.sections
+    - toc.integrate
+extra_css:
+  - assets/stylesheets/extra.css
+custom_dir:   
+
+markdown_extensions:
+  - attr_list
+  - admonition
+  - meta
+  - toc:
+      permalink: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.superfences
+
+plugins:
+  - awesome-pages:
+      strict: false
+  - redirects
+  - search
+
+
