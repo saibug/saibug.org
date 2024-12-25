@@ -6,7 +6,7 @@ Welcome to my personal blog, and thank you for visiting!
 
 Greeting ...
 
-My name is Seddik, I am system information graduated from Ingesup, currently based in Montigny les Cormeilles city France. I am an avid supporter of Open Source software and GNU Project.
+I am GNU/LINUX system engineer and open source enthusiast. I am an avid supporter of Free Software and GNU Project.
 
 ## Employment History
 
