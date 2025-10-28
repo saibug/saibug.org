@@ -34,7 +34,7 @@ markdown_extensions:
 nav:
   - Tech Blog:
     - 2025:
-      - docs/Tech Blog/2025/28-20-25-vagrant-installing-running.md
+      - posts/28-20-25-vagrant-installing-running.md
 plugins:
   - awesome-pages:
       strict: false
