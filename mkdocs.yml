@@ -34,11 +34,12 @@ markdown_extensions:
 nav:
   - Tech Blog:
     - 2025:
-      - posts/28-20-25-vagrant-installing-running.md
+      - posts/Vagrant-installing-running.md
 plugins:
   - awesome-pages:
       strict: false
   - redirects
   - search
+  - git-revision-date-localized
 
 
