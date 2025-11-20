@@ -2,12 +2,17 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://saibug.org/</loc>
-         <lastmod>2025-10-28</lastmod>
+         <lastmod>2025-11-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://saibug.org/posts/28-20-25-vagrant-installing-running/</loc>
-         <lastmod>2025-10-28</lastmod>
+         <loc>https://saibug.org/events/2025-PyconFR/</loc>
+         <lastmod>2025-11-20</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://saibug.org/posts/Vagrant-installing-running/</loc>
+         <lastmod>2025-11-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
