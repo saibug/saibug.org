@@ -35,6 +35,9 @@ nav:
   - Tech Blog:
     - 2025:
       - posts/Vagrant-installing-running.md
+  - Events:
+      - 2025:
+          - events/2025-PyconFR.md
 plugins:
   - awesome-pages:
       strict: false
