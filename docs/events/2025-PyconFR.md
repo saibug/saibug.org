@@ -1,10 +1,6 @@
-## PyconFR 2025
+## PyconFR 2025 (30 October - 2 Novembre)
 
-
-![Pyconfr-Lyon](docs/assets/images/lyon.jpg)
-
-
-
+![Lyon](images/lyon.jpg){ width="50%" }
 
 
 
