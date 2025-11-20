@@ -4,4 +4,4 @@ mkdocs-material==9.1.21
 mkdocs-redirects==1.2.1
 mkdocs-static-i18n==0.56
 mkdocs-rss-plugin==1.8.0
-git-revision-date-localized
+mkdocs-git-revision-date-localized-plugin
