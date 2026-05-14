@@ -33,8 +33,10 @@ markdown_extensions:
 
 nav:
   - Tech Blog:
-    - 2025:
-      - posts/Vagrant-installing-running.md
+    - Virtualization:
+      - posts/Vagrant-getting-started.md
+    Containers:
+      - posts/Kind-local-kubernetes-cluster.md
   - Events:
       - 2025:
           - events/2025-PyconFR.md
