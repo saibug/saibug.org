@@ -1,3 +1,8 @@
+---
+title: "Run a local Kubernetes cluster with Kind"
+description: "Install Kind (Kubernetes in Docker) with go install, create a local cluster, deploy the NGINX ingress controller and expose a test app."
+---
+
 [Kind](https://sigs.k8s.io/kind) (or Kubernetes in Docker) is one of the lightweight solutions for running your own Kubernetes cluster locally.
 
 There are many ways to install Kind. In this guide, we’ll focus on the `go install` option. For other installation methods, refer to the [Kind installation options](https://kind.sigs.k8s.io/docs/user/quick-start/#installation).

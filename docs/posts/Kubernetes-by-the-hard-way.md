@@ -1,3 +1,8 @@
+---
+title: "Kubernetes the hard way on Fedora with libvirt"
+description: "Building Kubernetes by hand on Fedora Server libvirt VMs: lessons on pod routes, cluster DNS, Argo CD and public HTTPS behind a single IP."
+---
+
 This post is a short write-up of how I built a Kubernetes cluster by hand, following [Kubernetes The Hard Way](https://github.com/kelseyhightower/kubernetes-the-hard-way) by **Kelsey Hightower** in its Rocky Linux adaptation by **Wale Soyinka**.
 
 The Rocky Linux labs target Enterprise Linux on x86_64. I used Fedora Server 44 instead, with all the machines running as libvirt VMs on a single hypervisor that has only one public IP. Then I went further than the labs: cluster DNS, Argo CD, and public HTTPS access for apps.

@@ -1,3 +1,7 @@
+---
+title: "Getting started with Vagrant on Fedora"
+description: "Step-by-step guide to installing Vagrant with libvirt on Fedora and spinning up reproducible virtual machines with a Vagrantfile."
+---
 
 _“Vagrant is a versatile tool used by devops engineers, developers, system administrators, and tech enthusiasts to create development and testing environments. It enables building and managing virtual machines within a single streamlined workflow. By focusing on automation, it reduces environment setup time, and makes the *works on my machine* issue a thing of the past.”_
 

@@ -1,6 +1,7 @@
 site_name: Saibug
 site_url: https://saibug.org
-site_description: "Saibug - GNU/LINUX system engineer"
+site_description: "Saibug - GNU/Linux system engineer blog: Linux, virtualization, containers and Kubernetes"
+site_author: Seddik Alaoui Ismaili
 repo_url: https://github.com/saibug/saibug.org
 
 theme:
@@ -14,9 +15,18 @@ theme:
     - navigation.expand
     - navigation.sections
     - toc.integrate
+    - content.code.copy
+    - navigation.instant
 extra_css:
   - assets/stylesheets/extra.css
-custom_dir:   
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/saibug
+    - icon: material/rss
+      link: https://saibug.org/feed_rss_created.xml
+      name: RSS feed
 
 markdown_extensions:
   - attr_list
@@ -47,5 +57,10 @@ plugins:
   - redirects
   - search
   - git-revision-date-localized
+  - social
+  - rss:
+      match_path: "(posts|events)/.*"
+      date_from_meta:
+        as_creation: git
 
 

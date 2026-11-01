@@ -1,3 +1,8 @@
+---
+title: "Saibug - GNU/Linux system engineer"
+description: "Personal blog of Seddik Alaoui Ismaili, GNU/Linux system engineer and free software enthusiast: Linux, virtualization, containers."
+---
+
 # WHO-AM-I 
 
 ![saibug](assets/images/image.png){: style="width:100px;border-radius: 50%;"}
@@ -10,6 +15,7 @@ I am GNU/LINUX system engineer and open source enthusiast. I am an avid supporte
 
 ## Employment History
 
+- **Unowhy** : Devops Engineer (current)
 - **Group SII** : Linux System Engineer
 - **Numberly (1000mercis Group)** : Apprentice Linux SysAdmin
 - **Net-Veille Systems** : Apprentice Linux Admin

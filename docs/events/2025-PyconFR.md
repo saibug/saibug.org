@@ -1,3 +1,8 @@
+---
+title: "PyconFR 2025 in Lyon"
+description: "Notes and impressions from PyconFR 2025 in Lyon, the yearly French Python conference organized by AFPy."
+---
+
 ## PyconFR 2025 (30 October - 2 Novembre)
 
 ![Lyon](images/lyon.jpg){ width="50%" }
