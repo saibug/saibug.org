@@ -37,6 +37,7 @@ nav:
           - posts/Vagrant-getting-started.md
       - Containers:
           - posts/Kind-local-kubernetes-cluster.md
+          - posts/Kubernetes-by-the-hard-way.md
   - Events:
       - 2025:
           - events/2025-PyconFR.md
