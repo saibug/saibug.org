@@ -1,0 +1,1271 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Saibug - GNU/LINUX system engineer">
+      
+      
+      
+        <link rel="canonical" href="https://saibug.org/posts/Kubernetes-by-the-hard-way/">
+      
+      
+        <link rel="prev" href="../Kind-local-kubernetes-cluster/">
+      
+      
+        <link rel="next" href="../../events/2025-PyconFR/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>Kubernetes by the hard way - Saibug</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#architecture" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Saibug" class="md-header__button md-logo" aria-label="Saibug" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2m3.9 6.1c-.4-.4-1.1-1.1-2.4-1.1H11C8.2 7 6 4.8 6 2H4c0 3.2 2.1 5.8 5 6.7V22h2v-6h2v6h2V10.1l4 3.9 1.4-1.4z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Saibug
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Kubernetes by the hard way
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/saibug/saibug.org" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../Vagrant-getting-started/" class="md-tabs__link">
+          
+  
+  
+  Tech Blog
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../events/2025-PyconFR/" class="md-tabs__link">
+          
+  
+  
+  Events
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Saibug" class="md-nav__button md-logo" aria-label="Saibug" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2m3.9 6.1c-.4-.4-1.1-1.1-2.4-1.1H11C8.2 7 6 4.8 6 2H4c0 3.2 2.1 5.8 5 6.7V22h2v-6h2v6h2V10.1l4 3.9 1.4-1.4z"/></svg>
+
+    </a>
+    Saibug
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/saibug/saibug.org" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech Blog
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tech Blog
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_1_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1_1" id="__nav_1_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Virtualizations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Virtualizations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Vagrant-getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vagrant getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_1_2" id="__nav_1_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Containers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_1_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Containers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Kind-local-kubernetes-cluster/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kind local kubernetes cluster
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes by the hard way
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes by the hard way
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#following-the-labs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Following the labs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Following the labs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lesson-1-check-the-pod-routes-on-every-machine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lesson 1: check the pod routes on every machine
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lesson-2-the-cluster-has-no-dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lesson 2: the cluster has no DNS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lesson-3-the-control-plane-cant-reach-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lesson 3: the control plane can't reach Services
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploying-argo-cd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deploying Argo CD
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exposing-apps-with-a-single-public-ip" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exposing apps with a single public ip
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Events
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2025
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    2025
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../events/2025-PyconFR/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2025 PyconFR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+  <h1>Kubernetes by the hard way</h1>
+
+<p>This post is a short write-up of how I built a Kubernetes cluster by hand, following <a href="https://github.com/kelseyhightower/kubernetes-the-hard-way">Kubernetes The Hard Way</a> by <strong>Kelsey Hightower</strong> in its Rocky Linux adaptation by <strong>Wale Soyinka</strong>.</p>
+<p>The Rocky Linux labs target Enterprise Linux on x86_64. I used Fedora Server 44 instead, with all the machines running as libvirt VMs on a single hypervisor that has only one public IP. Then I went further than the labs: cluster DNS, Argo CD, and public HTTPS access for apps.</p>
+<h3 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h3>
+<p><img alt="Hypervisor and Kubernetes cluster architecture" src="../images/hypervisor_k8s_architecture_flowchart.png" width="80%" /></p>
+<table>
+<thead>
+<tr>
+<th>VM</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>jumpbox</code></td>
+<td>Admin machine: <code>kubectl</code>, <code>helm</code>, certificates and configs</td>
+</tr>
+<tr>
+<td><code>server</code></td>
+<td>Control plane: etcd, kube-apiserver, kube-controller-manager, kube-scheduler</td>
+</tr>
+<tr>
+<td><code>node-0</code>, <code>node-1</code></td>
+<td>Workers: containerd, kubelet, kube-proxy</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Network</th>
+<th>Range</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pod network node-0</td>
+<td><code>10.200.0.0/24</code></td>
+</tr>
+<tr>
+<td>Pod network node-1</td>
+<td><code>10.200.1.0/24</code></td>
+</tr>
+<tr>
+<td>Services</td>
+<td><code>10.32.0.0/24</code> (API <code>10.32.0.1</code>, DNS <code>10.32.0.10</code>)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="prerequisites"><strong>Prerequisites</strong><a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
+<ol>
+<li>A host running <a href="https://fedoraproject.org/server/">Fedora Server</a> with virtualization enabled</li>
+<li><a href="https://libvirt.org/">libvirt</a> with <code>virt-install</code> and <code>virsh</code></li>
+<li>A Fedora Server 44 install image for the VMs</li>
+<li>Optional, for public access: a domain name pointing to the hypervisor's public IP</li>
+</ol>
+<p>Install the virtualization stack on the host:</p>
+<div class="highlight"><pre><span></span><code>$ sudo dnf install -y @virtualization
+$ sudo systemctl enable --now libvirtd
+</code></pre></div>
+<hr />
+<p>I created four VMs on the default libvirt NAT network. An example for one machine (adapt CPU, memory, disk and image path):</p>
+<div class="highlight"><pre><span></span><code>$ sudo virt-install \
+    --name node-0 \
+    --vcpus 2 --memory 4096 \
+    --disk size=20 \
+    --os-variant fedora-44 \
+    --network network=default \
+    --location /var/lib/libvirt/images/Fedora-Server-dvd-x86_64-44.iso \
+    --graphics none --extra-args 'console=ttyS0'
+</code></pre></div>
+<p>Once all four are installed:</p>
+<div class="highlight"><pre><span></span><code>$ sudo virsh list --all
+ Id   Name      State
+-------------------------
+ 2    server    running
+ 3    jumpbox   running
+ 4    node-0    running
+ 5    node-1    running
+</code></pre></div>
+<hr />
+<hr />
+<h3 id="following-the-labs"><strong>Following the labs</strong><a class="headerlink" href="#following-the-labs" title="Permanent link">&para;</a></h3>
+<p>I followed the Rocky Linux labs in order. Most commands work unchanged on Fedora since both use dnf, systemd and NetworkManager.</p>
+<ol>
+<li><a href="https://docs.rockylinux.org/10/labs/kubernetes-the-hard-way/lab1-prerequisites/">Prerequisites</a></li>
+<li><a href="https://docs.rockylinux.org/10/labs/kubernetes-the-hard-way/lab2-jumpbox/">Set Up The Jumpbox</a></li>
+<li><a href="https://docs.rockylinux.org/10/labs/kubernetes-the-hard-way/lab3-compute-resources/">Provisioning Compute Resources</a></li>
+<li><a href="https://docs.rockylinux.org/10/labs/kubernetes-the-hard-way/lab4-certificate-authority/">Provisioning a CA and Generating TLS Certificates</a></li>
+<li><a href="https://docs.rockylinux.org/10/labs/kubernetes-the-hard-way/lab5-kubernetes-configuration-files/">Generating Kubernetes Configuration Files for Authentication</a></li>
+<li><a href="https://docs.rockylinux.org/10/labs/kubernetes-the-hard-way/lab6-data-encryption-keys/">Generating the Data Encryption Configuration and Key</a></li>
+<li><a href="https://docs.rockylinux.org/10/labs/kubernetes-the-hard-way/lab7-bootstrapping-etcd/">Bootstrapping the etcd Cluster</a></li>
+<li><a href="https://docs.rockylinux.org/10/labs/kubernetes-the-hard-way/lab8-bootstrapping-kubernetes-controllers/">Bootstrapping the Kubernetes Control Plane</a></li>
+<li><a href="https://docs.rockylinux.org/10/labs/kubernetes-the-hard-way/lab9-bootstrapping-kubernetes-workers/">Bootstrapping the Kubernetes Worker Nodes</a></li>
+<li><a href="https://docs.rockylinux.org/10/labs/kubernetes-the-hard-way/lab10-configuring-kubectl/">Configuring kubectl for Remote Access</a></li>
+<li><a href="https://docs.rockylinux.org/10/labs/kubernetes-the-hard-way/lab11-pod-network-routes/">Provisioning Pod Network Routes</a></li>
+<li><a href="https://docs.rockylinux.org/10/labs/kubernetes-the-hard-way/lab12-smoke-test/">Smoke Test</a></li>
+</ol>
+<p>At the end the smoke test passes: deployments, port-forward, logs, exec and NodePort services all work. But the cluster is still bare, and a few things bit me as soon as I tried to install a real application.</p>
+<hr />
+<h4 id="lesson-1-check-the-pod-routes-on-every-machine"><strong>Lesson 1: check the pod routes on every machine</strong><a class="headerlink" href="#lesson-1-check-the-pod-routes-on-every-machine" title="Permanent link">&para;</a></h4>
+<p>Lab 11 adds static routes so each machine can reach the other workers' pods. Mine were incomplete: <code>server</code> only had a route to node-0's pods, and the two workers had no route to each other. The smoke test doesn't catch this because it only uses one pod.</p>
+<p>Every machine needs a route to every <em>other</em> worker's pod network:</p>
+<div class="highlight"><pre><span></span><code>$ ssh root@server 'ip route | grep 10.200'
+10.200.0.0/24 via &lt;node-0 IP&gt; dev enp1s0
+10.200.1.0/24 via &lt;node-1 IP&gt; dev enp1s0
+
+$ ssh root@node-0 'ip route | grep 10.200'
+10.200.0.0/24 dev cni0 proto kernel scope link src 10.200.0.1
+10.200.1.0/24 via &lt;node-1 IP&gt; dev enp1s0
+</code></pre></div>
+<p><code>ip route add</code> is lost at reboot. On Fedora, make sure the routes are permanent with NetworkManager:</p>
+<div class="highlight"><pre><span></span><code>$ nmcli -g NAME,DEVICE con show --active
+$ sudo nmcli con modify '&lt;connection&gt;' +ipv4.routes '10.200.1.0/24 &lt;node-1 IP&gt;'
+$ sudo nmcli con up '&lt;connection&gt;'
+</code></pre></div>
+<blockquote>
+<p><strong>Note:</strong>
+A missing route shows up later as random timeouts: DNS that works on one node only, webhooks that time out, certificates that never get issued. Check routes first.</p>
+</blockquote>
+<hr />
+<h4 id="lesson-2-the-cluster-has-no-dns"><strong>Lesson 2: the cluster has no DNS</strong><a class="headerlink" href="#lesson-2-the-cluster-has-no-dns" title="Permanent link">&para;</a></h4>
+<p>The labs don't install a DNS add-on, so pods can't resolve service names. Almost every real app needs it :( . I installed <a href="https://coredns.io/">CoreDNS</a> with Helm from the jumpbox, on the IP the kubelets give pods as their DNS server (clusterDNS in the kubelet config):</p>
+<div class="highlight"><pre><span></span><code>$ ssh root@node-0 grep -A1 clusterDNS /var/lib/kubelet/kubelet-config.yaml
+</code></pre></div>
+<p>The first attempt crash-looped with <code>plugin/loop: Loop ... detected</code>: and the nodes <code>/etc/resolv.conf</code> points to a local resolver, so CoreDNS was forwarding queries to itself. The fix is to give it real upstream servers in a values file, <code>coredns-values.yaml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">replicaCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="nt">service</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">clusterIP</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.32.0.10</span>
+<span class="nt">servers</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">zones</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">zone</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.</span>
+<span class="w">    </span><span class="nt">use_tcp</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">53</span>
+<span class="w">  </span><span class="nt">plugins</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">errors</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">health</span>
+<span class="w">    </span><span class="nt">configBlock</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+<span class="w">      </span><span class="no">lameduck 10s</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ready</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubernetes</span>
+<span class="w">    </span><span class="nt">parameters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cluster.local in-addr.arpa ip6.arpa</span>
+<span class="w">    </span><span class="nt">configBlock</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+<span class="w">      </span><span class="no">pods insecure</span>
+<span class="w">      </span><span class="no">fallthrough in-addr.arpa ip6.arpa</span>
+<span class="w">      </span><span class="no">ttl 30</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prometheus</span>
+<span class="w">    </span><span class="nt">parameters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0.0.0:9153</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forward</span>
+<span class="w">    </span><span class="nt">parameters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">. 1.1.1.1 8.8.8.8</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cache</span>
+<span class="w">    </span><span class="nt">parameters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">loop</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reload</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">loadbalance</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>$ helm repo add coredns https://coredns.github.io/helm
+$ helm upgrade --install coredns coredns/coredns -n kube-system -f coredns-values.yaml
+</code></pre></div>
+<p>Test from a pod:</p>
+<div class="highlight"><pre><span></span><code>$ kubectl run dnstest --rm -it --image=busybox:1.36 --restart=Never -- \
+    sh -c 'nslookup kubernetes.default.svc.cluster.local; nslookup github.com'
+</code></pre></div>
+<hr />
+<h4 id="lesson-3-the-control-plane-cant-reach-services"><strong>Lesson 3: the control plane can't reach Services</strong><a class="headerlink" href="#lesson-3-the-control-plane-cant-reach-services" title="Permanent link">&para;</a></h4>
+<p>The <code>server</code> machine runs no kube-proxy, so the API server can't reach Service IPs. That breaks anything with an admission webhook, such as cert-manager (<code>failed calling webhook ... context deadline exceeded</code>).</p>
+<p>The fix is one flag in <code>/etc/systemd/system/kube-apiserver.service</code> on <code>server</code>, which makes the API server call webhook pods by their pod IPs (reachable thanks to the routes from lesson 1):</p>
+<div class="highlight"><pre><span></span><code>  --enable-aggregator-routing=true \
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>$ sudo systemctl daemon-reload &amp;&amp; sudo systemctl restart kube-apiserver
+</code></pre></div>
+<hr />
+<h3 id="deploying-argo-cd"><strong>Deploying Argo CD</strong><a class="headerlink" href="#deploying-argo-cd" title="Permanent link">&para;</a></h3>
+<p><a href="https://argo-cd.readthedocs.io/">Argo CD</a> runs fine on this cluster once DNS works. It needs no persistent storage.</p>
+<div class="highlight"><pre><span></span><code>$ kubectl create namespace argocd
+$ kubectl apply -n argocd --server-side --force-conflicts \
+    -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+$ kubectl -n argocd get pods -w
+</code></pre></div>
+<p>Get the initial admin password:</p>
+<div class="highlight"><pre><span></span><code>$ kubectl -n argocd get secret argocd-initial-admin-secret \
+    -o jsonpath='{.data.password}' | base64 -d; echo
+</code></pre></div>
+<h3 id="exposing-apps-with-a-single-public-ip"><strong>Exposing apps with a single public ip</strong><a class="headerlink" href="#exposing-apps-with-a-single-public-ip" title="Permanent link">&para;</a></h3>
+<p>Only the hypervisor is reachable from the internet, and there is no cloud LoadBalancer.<br />
+My setup :"</p>
+<ul>
+<li>Traefik as ingress controller, exposed as a NodePort on 30080 / 30443.</li>
+<li>HAProxy on the hypervisor, passing TCP 80 / 443 to those nodeports.</li>
+<li>cert-manager with let's encrypt for TLS.</li>
+<li>
+<p>One DNS record per app pointing to the public ip .</p>
+</li>
+<li>
+<p>Traefik</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code>$ helm repo add traefik https://traefik.github.io/charts
+$ helm install traefik traefik/traefik -n traefik --create-namespace \
+    --set service.type=NodePort \
+    --set ports.web.nodePort=30080 \
+    --set ports.websecure.nodePort=30443 \
+    --set deployment.replicas=2 \
+    --set ingressClass.isDefaultClass=true  
+</code></pre></div>
+<ol>
+<li>HAproxy (on the hypervisor) </li>
+</ol>
+<p>Added to <code>/etc/haproxy/haproxy.cfg</code>
+<div class="highlight"><pre><span></span><code>frontend http_in
+    bind *:80
+    mode tcp
+    default_backend k8s_http
+
+frontend https_in
+    bind *:443
+    mode tcp
+    default_backend k8s_https
+
+backend k8s_http
+    mode tcp
+    balance roundrobin
+    server node0 &lt;node-0 IP&gt;:30080 check
+    server node1 &lt;node-1 IP&gt;:30080 check
+
+backend k8s_https
+    mode tcp
+    balance roundrobin
+    server node0 &lt;node-0 IP&gt;:30443 check
+    server node1 &lt;node-1 IP&gt;:30443 check
+</code></pre></div></p>
+<div class="highlight"><pre><span></span><code>$ sudo setsebool -P haproxy_connect_any 1
+$ sudo firewall-cmd --permanent --add-service=http --add-service=https
+$ sudo firewall-cmd --reload
+$ sudo systemctl enable --now haproxy
+</code></pre></div>
+<ol>
+<li>cert-manager and let's encryt</li>
+</ol>
+<div class="highlight"><pre><span></span><code>$ sudo setsebool -P haproxy_connect_any 1
+$ sudo firewall-cmd --permanent --add-service=http --add-service=https
+$ sudo firewall-cmd --reload
+$ sudo systemctl enable --now haproxy
+</code></pre></div>
+<p><code>issuers.yaml</code> : </p>
+<div class="highlight"><pre><span></span><code>apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: &lt;your email&gt;
+    privateKeySecretRef:
+      name: letsencrypt-prod-key
+    solvers:
+      - http01:
+          ingress:
+            ingressClassName: traefik
+</code></pre></div>
+<ol>
+<li>ArgoCD over HTTPS</li>
+</ol>
+<p>Traefik terminates TLS, so ArgoCD serves plain HTTP behind it: </p>
+<div class="highlight"><pre><span></span><code>$ kubectl -n argocd patch configmap argocd-cmd-params-cm --type merge \
+    -p '{"data":{"server.insecure":"true"}}'
+$ kubectl -n argocd rollout restart deployment argocd-server
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argocd-server
+  namespace: argocd
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts: [argocd.&lt;your-domain&gt;]
+      secretName: argocd-server-tls
+  rules:
+    - host: argocd.&lt;your-domain&gt;
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: argocd-server
+                port:
+                  number: 80
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>$ kubectl get certificate -n argocd
+$ argocd login argocd.&lt;your-domain&gt; --grpc-web --username admin
+</code></pre></div>
+<p>Argo CD is now reachable at https://argocd.<your-domain> with a valid certificate.</p>
+<h3 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://github.com/kelseyhightower/kubernetes-the-hard-way">Kubernetes The Hard Way</a>, Kelsey Hightower</li>
+<li><a href="https://docs.rockylinux.org/10/labs/kubernetes-the-hard-way/lab0-README/">Kubernetes The Hard Way, Rocky Linux edition</a>, Wale Soyinka</li>
+<li><a href="https://github.com/coredns/helm">CoreDNS Helm chart</a></li>
+<li><a href="https://argo-cd.readthedocs.io/">Argo CD documentation</a></li>
+<li><a href="https://github.com/traefik/traefik-helm-chart">Traefik Helm chart</a></li>
+<li><a href="https://cert-manager.io/docs/">cert-manager documentation</a></li>
+</ul>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 1, 2026 00:13:56 UTC">November 1, 2026</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.expand", "navigation.sections", "toc.integrate"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>
